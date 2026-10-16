@@ -1,0 +1,211 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - link "냉장고 한 끼 홈" [ref=e4] [cursor=pointer]:
+        - /url: "#top"
+        - img [ref=e6]
+        - text: 냉장고 한 끼
+      - generic [ref=e9]: 오늘도 맛있는 냉털 생활
+    - main [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e13]:
+          - generic [ref=e14]: YOUR FRIDGE, YOUR MENU
+          - heading "있는 재료로 맛있는 한 끼." [level=1] [ref=e15]:
+            - text: 있는 재료로
+            - text: 맛있는 한 끼.
+          - paragraph [ref=e16]:
+            - text: 냉장고 속 재료를 알려주세요.
+            - text: 오늘 만들 수 있는 메뉴를 찾아드릴게요.
+        - generic "신선한 채소가 담긴 접시 일러스트" [ref=e17]:
+          - generic [ref=e18]: FRESH FROM YOUR FRIDGE
+          - generic [ref=e24]: ✳
+          - generic [ref=e25]: ✳
+          - generic [ref=e26]:
+            - text: 남은 재료도
+            - text: 근사한 요리가 돼요
+      - region "요리 찾기" [ref=e27]:
+        - complementary [ref=e28]:
+          - generic [ref=e29]: 01 — MY INGREDIENTS
+          - heading "냉장고 재료 담기" [level=2] [ref=e30]
+          - paragraph [ref=e31]: 재료를 입력하고 추가 버튼을 눌러주세요.
+          - generic [ref=e32]:
+            - textbox "재료 입력" [ref=e33]:
+              - /placeholder: "예: 달걀, 양파, 두부"
+            - button "재료 추가" [ref=e34] [cursor=pointer]:
+              - img [ref=e35]
+          - paragraph [ref=e37]: 빠르게 추가하기
+          - generic [ref=e38]:
+            - button "+ 두부" [ref=e39] [cursor=pointer]
+            - button "+ 밥" [ref=e40] [cursor=pointer]
+            - button "+ 김치" [ref=e41] [cursor=pointer]
+            - button "+ 감자" [ref=e42] [cursor=pointer]
+            - button "+ 토마토" [ref=e43] [cursor=pointer]
+          - generic [ref=e44]:
+            - heading "내 재료 목록" [level=3] [ref=e45]
+            - generic [ref=e46]: 3개
+          - generic [ref=e47]:
+            - generic [ref=e48]:
+              - text: 달걀
+              - button "달걀 삭제" [ref=e49] [cursor=pointer]:
+                - img [ref=e50]
+            - generic [ref=e52]:
+              - text: 양파
+              - button "양파 삭제" [ref=e53] [cursor=pointer]:
+                - img [ref=e54]
+            - generic [ref=e56]:
+              - text: 대파
+              - button "대파 삭제" [ref=e57] [cursor=pointer]:
+                - img [ref=e58]
+          - generic [ref=e60]:
+            - img [ref=e61]
+            - generic [ref=e64]: 재료가 많을수록 더 잘 맞는 메뉴를 찾을 수 있어요. 양념은 기본으로 있다고 가정해요.
+        - region "추천 레시피" [ref=e65]:
+          - generic [ref=e66]:
+            - generic [ref=e67]:
+              - generic [ref=e68]: 02 — TODAY'S IDEAS
+              - heading "지금 만들 수 있는 메뉴 9가지" [level=2] [ref=e69]
+            - combobox "레시피 정렬" [ref=e70] [cursor=pointer]:
+              - option "재료 일치순" [selected]
+              - option "빠른 조리순"
+          - generic [ref=e71]:
+            - button "양파 달걀국 재료 3/4개 레시피 저장 양파 달걀국 12분 쉬움 2인분 필요 재료 4개 레시피 보기 ↗" [ref=e72] [cursor=pointer]:
+              - generic [ref=e73]:
+                - img "양파 달걀국" [ref=e74]
+                - generic [ref=e75]: 재료 3/4개
+                - button "레시피 저장" [ref=e76]:
+                  - img [ref=e77]
+              - generic [ref=e79]:
+                - heading "양파 달걀국" [level=3] [ref=e80]
+                - generic [ref=e81]:
+                  - generic [ref=e82]: 12분
+                  - generic [ref=e84]: 쉬움
+                  - generic [ref=e86]: 2인분
+                - generic [ref=e87]:
+                  - generic [ref=e88]: 필요 재료 4개
+                  - strong [ref=e89]: 레시피 보기 ↗
+            - button "얼큰 두부찌개 재료 3/5개 레시피 저장 얼큰 두부찌개 25분 보통 2인분 필요 재료 5개 레시피 보기 ↗" [ref=e90] [cursor=pointer]:
+              - generic [ref=e91]:
+                - img "얼큰 두부찌개" [ref=e92]
+                - generic [ref=e93]: 재료 3/5개
+                - button "레시피 저장" [ref=e94]:
+                  - img [ref=e95]
+              - generic [ref=e97]:
+                - heading "얼큰 두부찌개" [level=3] [ref=e98]
+                - generic [ref=e99]:
+                  - generic [ref=e100]: 25분
+                  - generic [ref=e102]: 보통
+                  - generic [ref=e104]: 2인분
+                - generic [ref=e105]:
+                  - generic [ref=e106]: 필요 재료 5개
+                  - strong [ref=e107]: 레시피 보기 ↗
+            - button "버섯 치즈 오믈렛 재료 2/4개 레시피 저장 버섯 치즈 오믈렛 12분 쉬움 1인분 필요 재료 4개 레시피 보기 ↗" [ref=e108] [cursor=pointer]:
+              - generic [ref=e109]:
+                - img "버섯 치즈 오믈렛" [ref=e110]
+                - generic [ref=e111]: 재료 2/4개
+                - button "레시피 저장" [ref=e112]:
+                  - img [ref=e113]
+              - generic [ref=e115]:
+                - heading "버섯 치즈 오믈렛" [level=3] [ref=e116]
+                - generic [ref=e117]:
+                  - generic [ref=e118]: 12분
+                  - generic [ref=e120]: 쉬움
+                  - generic [ref=e122]: 1인분
+                - generic [ref=e123]:
+                  - generic [ref=e124]: 필요 재료 4개
+                  - strong [ref=e125]: 레시피 보기 ↗
+            - button "포근한 계란볶음밥 재료 2/4개 레시피 저장 포근한 계란볶음밥 15분 쉬움 1인분 필요 재료 4개 레시피 보기 ↗" [ref=e126] [cursor=pointer]:
+              - generic [ref=e127]:
+                - img "포근한 계란볶음밥" [ref=e128]
+                - generic [ref=e129]: 재료 2/4개
+                - button "레시피 저장" [ref=e130]:
+                  - img [ref=e131]
+              - generic [ref=e133]:
+                - heading "포근한 계란볶음밥" [level=3] [ref=e134]
+                - generic [ref=e135]:
+                  - generic [ref=e136]: 15분
+                  - generic [ref=e138]: 쉬움
+                  - generic [ref=e140]: 1인분
+                - generic [ref=e141]:
+                  - generic [ref=e142]: 필요 재료 4개
+                  - strong [ref=e143]: 레시피 보기 ↗
+            - button "토마토 달걀 파스타 재료 2/4개 레시피 저장 토마토 달걀 파스타 20분 쉬움 1인분 필요 재료 4개 레시피 보기 ↗" [ref=e144] [cursor=pointer]:
+              - generic [ref=e145]:
+                - img "토마토 달걀 파스타" [ref=e146]
+                - generic [ref=e147]: 재료 2/4개
+                - button "레시피 저장" [ref=e148]:
+                  - img [ref=e149]
+              - generic [ref=e151]:
+                - heading "토마토 달걀 파스타" [level=3] [ref=e152]
+                - generic [ref=e153]:
+                  - generic [ref=e154]: 20분
+                  - generic [ref=e156]: 쉬움
+                  - generic [ref=e158]: 1인분
+                - generic [ref=e159]:
+                  - generic [ref=e160]: 필요 재료 4개
+                  - strong [ref=e161]: 레시피 보기 ↗
+            - button "참치마요 덮밥 재료 2/5개 레시피 저장 참치마요 덮밥 10분 쉬움 1인분 필요 재료 5개 레시피 보기 ↗" [ref=e162] [cursor=pointer]:
+              - generic [ref=e163]:
+                - img "참치마요 덮밥" [ref=e164]
+                - generic [ref=e165]: 재료 2/5개
+                - button "레시피 저장" [ref=e166]:
+                  - img [ref=e167]
+              - generic [ref=e169]:
+                - heading "참치마요 덮밥" [level=3] [ref=e170]
+                - generic [ref=e171]:
+                  - generic [ref=e172]: 10분
+                  - generic [ref=e174]: 쉬움
+                  - generic [ref=e176]: 1인분
+                - generic [ref=e177]:
+                  - generic [ref=e178]: 필요 재료 5개
+                  - strong [ref=e179]: 레시피 보기 ↗
+            - button "김치볶음밥 재료 2/5개 레시피 저장 김치볶음밥 15분 쉬움 1인분 필요 재료 5개 레시피 보기 ↗" [ref=e180] [cursor=pointer]:
+              - generic [ref=e181]:
+                - img "김치볶음밥" [ref=e182]
+                - generic [ref=e183]: 재료 2/5개
+                - button "레시피 저장" [ref=e184]:
+                  - img [ref=e185]
+              - generic [ref=e187]:
+                - heading "김치볶음밥" [level=3] [ref=e188]
+                - generic [ref=e189]:
+                  - generic [ref=e190]: 15분
+                  - generic [ref=e192]: 쉬움
+                  - generic [ref=e194]: 1인분
+                - generic [ref=e195]:
+                  - generic [ref=e196]: 필요 재료 5개
+                  - strong [ref=e197]: 레시피 보기 ↗
+            - button "바삭 감자전 재료 1/3개 레시피 저장 바삭 감자전 20분 쉬움 2인분 필요 재료 3개 레시피 보기 ↗" [ref=e198] [cursor=pointer]:
+              - generic [ref=e199]:
+                - img "바삭 감자전" [ref=e200]
+                - generic [ref=e201]: 재료 1/3개
+                - button "레시피 저장" [ref=e202]:
+                  - img [ref=e203]
+              - generic [ref=e205]:
+                - heading "바삭 감자전" [level=3] [ref=e206]
+                - generic [ref=e207]:
+                  - generic [ref=e208]: 20분
+                  - generic [ref=e210]: 쉬움
+                  - generic [ref=e212]: 2인분
+                - generic [ref=e213]:
+                  - generic [ref=e214]: 필요 재료 3개
+                  - strong [ref=e215]: 레시피 보기 ↗
+            - button "오이 두부 샐러드 재료 1/4개 레시피 저장 오이 두부 샐러드 10분 쉬움 1인분 필요 재료 4개 레시피 보기 ↗" [ref=e216] [cursor=pointer]:
+              - generic [ref=e217]:
+                - img "오이 두부 샐러드" [ref=e218]
+                - generic [ref=e219]: 재료 1/4개
+                - button "레시피 저장" [ref=e220]:
+                  - img [ref=e221]
+              - generic [ref=e223]:
+                - heading "오이 두부 샐러드" [level=3] [ref=e224]
+                - generic [ref=e225]:
+                  - generic [ref=e226]: 10분
+                  - generic [ref=e228]: 쉬움
+                  - generic [ref=e230]: 1인분
+                - generic [ref=e231]:
+                  - generic [ref=e232]: 필요 재료 4개
+                  - strong [ref=e233]: 레시피 보기 ↗
+    - contentinfo [ref=e234]:
+      - generic [ref=e235]: 냉장고 속 작은 재료가 오늘의 메뉴가 되는 곳.
+      - generic [ref=e236]:
+        - img [ref=e237]
+        - text: 오늘도 맛있게
+  - status
