@@ -82,6 +82,7 @@
     .results{min-width:0;padding-top:22px}
     .results-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:19px;gap:15px}
     .results-head h2{font-size:23px;letter-spacing:-.8px;margin:7px 0 0}
+    .result-note{font-size:11px;color:#858a7f;margin:5px 0 0}
     .match-select{border:1px solid #dfe0d6;background:transparent;border-radius:4px;font-size:12px;color:#596052;padding:9px 30px 9px 11px;cursor:pointer}
     .recipe-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
     .recipe-card{background:var(--white);border:1px solid #e8e7dd;min-width:0;cursor:pointer;transition:transform .25s,border-color .25s,box-shadow .25s;animation:rise .45s both}
@@ -105,6 +106,11 @@
     .empty-results strong{display:block;color:#343a31;font-size:17px;margin-bottom:5px}
     .empty-results p{max-width:440px;margin:0 auto;font-size:13px;line-height:1.6}
     .empty-suggestions{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:15px}
+    .pagination{display:flex;justify-content:center;align-items:center;gap:14px;padding:18px 0}
+    .pagination[hidden]{display:none}
+    .pagination button{min-width:44px;min-height:44px;border:1px solid #d9ddd1;background:var(--white);border-radius:3px;cursor:pointer;color:var(--green);font-size:16px}
+    .pagination button:disabled{opacity:.4;cursor:not-allowed}
+    .page-label{font-size:12px;color:#6e7569;min-width:72px;text-align:center}
     .footer{border-top:1px solid var(--line);padding:18px 0 28px;display:flex;align-items:center;justify-content:space-between;color:#95998f;font-size:11px}
     .footer-mark{display:flex;align-items:center;gap:7px;color:#65715e}
     .modal-backdrop{position:fixed;inset:0;background:#1820198a;display:none;align-items:center;justify-content:center;padding:20px;z-index:10;backdrop-filter:blur(3px)}
@@ -181,10 +187,11 @@
 
         <section class="results" aria-label="추천 레시피">
           <div class="results-head">
-            <div><div class="section-kicker">02 — TODAY'S IDEAS</div><h2 id="result-title">이런 메뉴 어때요?</h2></div>
+            <div><div class="section-kicker">02 — 10,000 RECIPE IDEAS</div><h2 id="result-title">이런 메뉴 어때요?</h2><p class="result-note">재료 조합으로 만든 아이디어예요. 필요한 재료를 모두 갖춘 메뉴만 보여드려요.</p></div>
             <select class="match-select" id="sort-select" aria-label="레시피 정렬"><option value="match">재료 많은 순</option><option value="time">빠른 조리순</option></select>
           </div>
           <div class="recipe-grid" id="recipe-grid"></div>
+          <nav class="pagination" id="recipe-pagination" aria-label="추천 레시피 페이지" hidden></nav>
         </section>
       </section>
     </main>
@@ -235,6 +242,57 @@
       {id:'soy-egg-rice',name:'간장 계란밥',category:'한식',time:5,level:'매우 쉬움',serves:1,ingredients:['밥','달걀','간장','버터'],required:['밥','달걀'],image:'photo-1603133872878-684f208fb84b',description:'따뜻한 밥에 버터와 반숙 달걀, 간장을 더하는 빠른 한 그릇.',steps:['따뜻한 밥을 그릇에 담고 버터를 올려 녹여요.','팬에 기름을 조금 두르고 달걀을 반숙 프라이로 부쳐요.','달걀 프라이를 밥 위에 올리고 간장을 조금씩 둘러요.','노른자와 버터, 간장을 밥에 골고루 비벼 먹어요.']},
       {id:'aglio-olio',name:'알리오 올리오 파스타',category:'양식',time:15,level:'보통',serves:1,ingredients:['파스타면','마늘','올리브오일','소금','후추'],required:['파스타면','마늘'],image:'photo-1473093295043-cdd812d0e601',description:'마늘과 올리브오일 향으로 맛을 내는 간단한 파스타예요.',steps:['끓는 물에 소금을 넣고 파스타면을 포장지 안내 시간만큼 삶아요.','팬에 올리브오일을 두르고 얇게 썬 마늘을 약불에서 천천히 볶아요.','면수 한 국자를 넣고 팬을 흔들어 오일과 물이 섞이게 해요.','삶은 면을 넣고 소금과 후추로 간해 골고루 볶아요.']}
     ];
+    function createRecipeIdeas(target){
+      const vegetables=['양파','대파','토마토','애호박','양배추','감자','당근','오이','버섯','김치'];
+      const families=[
+        {id:'fried-rice',name:'볶음밥',base:['밥'],mains:['달걀','참치','두부','스팸','버섯'],sauces:['간장','참기름','고춧가루','마요네즈'],method:'rice-fry',category:'한식',photo:'friedRice',time:15,tip:'밥은 차갑게 식은 밥을 쓰고 센 불에서 짧게 볶으면 고슬고슬해요.'},
+        {id:'rice-bowl',name:'덮밥',base:['밥'],mains:['달걀','참치','두부','스팸','버섯'],sauces:['간장','참기름','고춧가루','마요네즈'],method:'rice-bowl',category:'한식',photo:'tuna',time:15,tip:'재료의 물기를 줄이면 밥이 질어지지 않고 맛이 또렷해요.'},
+        {id:'bibimbap',name:'비빔밥',base:['밥'],mains:['달걀','참치','두부','스팸','버섯'],sauces:['간장','참기름','고춧가루','마요네즈'],method:'bibimbap',category:'한식',photo:'salad',time:18,tip:'재료를 각각 짧게 볶아 담으면 색과 식감이 살아나요.'},
+        {id:'rice-ball',name:'주먹밥',base:['밥'],mains:['달걀','참치','두부','스팸','버섯'],sauces:['간장','참기름','김치','치즈'],method:'rice-ball',category:'한식',photo:'friedRice',time:15,tip:'밥이 따뜻할 때 섞고 손에 물을 살짝 묻히면 잘 뭉쳐져요.'},
+        {id:'stir-fry',name:'재료 볶음',base:[],mains:['달걀','참치','두부','스팸','버섯'],sauces:['간장','참기름','고춧가루','치즈'],method:'stir-fry',category:'한식',photo:'tofu',time:15,tip:'재료를 비슷한 크기로 썰고 팬을 충분히 달궈 볶아주세요.'},
+        {id:'veggie-stir-fry',name:'한 팬 채소볶음',base:[],mains:['달걀','참치','두부','스팸','버섯'],sauces:['간장','참기름','고춧가루','치즈'],method:'stir-fry',category:'한식',photo:'tofu',time:15,tip:'채소는 숨이 살짝 죽을 정도까지만 볶아야 아삭함이 남아요.'},
+        {id:'stew',name:'찌개',base:['두부'],mains:['달걀','참치','버섯','스팸'],sauces:['간장','고춧가루','참기름','치즈'],method:'stew',category:'한식',photo:'stew',time:22,tip:'끓기 시작하면 중약불로 낮춰 재료가 부서지지 않게 익혀요.'},
+        {id:'soup',name:'맑은 국',base:[],mains:['달걀','두부','버섯','감자'],sauces:['간장','참기름','소금'],method:'soup',category:'한식',photo:'stew',time:18,tip:'간은 마지막에 조금씩 맞추고 재료가 익으면 오래 끓이지 마세요.'},
+        {id:'jeon',name:'재료전',base:['밀가루'],mains:['김치','감자','애호박','양배추','참치'],sauces:['간장','고춧가루','치즈'],method:'pancake',category:'한식',photo:'pancake',time:18,tip:'반죽을 얇게 펴고 가장자리에 기름을 둘러야 바삭하게 구워져요.'},
+        {id:'pancake',name:'바삭 부침개',base:['밀가루'],mains:['김치','감자','애호박','양배추','참치'],sauces:['간장','고춧가루','참기름'],method:'pancake',category:'한식',photo:'pancake',time:18,tip:'반죽은 오래 젓지 않고 차갑게 유지하면 더 바삭해요.'},
+        {id:'omelet',name:'달걀 오믈렛',base:['달걀'],mains:['버섯','치즈','참치','스팸'],sauces:['간장','참기름','마요네즈','치즈'],method:'omelet',category:'양식',photo:'omelet',time:12,tip:'달걀은 약불에서 천천히 익혀야 속이 촉촉하게 남아요.'},
+        {id:'egg-scramble',name:'몽글 달걀볶음',base:['달걀'],mains:['토마토','버섯','김치','양파'],sauces:['간장','참기름','마요네즈','치즈'],method:'omelet',category:'중식/기타',photo:'omelet',time:10,tip:'달걀을 넣은 뒤 크게 저어 몽글몽글한 덩어리를 만들어주세요.'},
+        {id:'pasta',name:'재료 파스타',base:['파스타면'],mains:['참치','버섯','달걀','두부','스팸'],sauces:['토마토','치즈','올리브오일','버터'],method:'pasta',category:'양식',photo:'pasta',time:20,tip:'면수는 조금씩 더해 소스가 면에 잘 붙도록 농도를 맞춰요.'},
+        {id:'ramen',name:'토핑 라면',base:['라면'],mains:['달걀','두부','스팸','참치','치즈'],sauces:['고춧가루','간장','참기름','치즈'],method:'ramen',category:'한식',photo:'ramen',time:10,tip:'면이 거의 익은 뒤 토핑을 넣고 너무 오래 끓이지 마세요.'},
+        {id:'toast',name:'든든 토스트',base:['식빵'],mains:['달걀','참치','치즈','버섯','스팸'],sauces:['버터','마요네즈','치즈','토마토'],method:'toast',category:'양식',photo:'toast',time:12,tip:'약불에서 뚜껑을 덮어 익히면 속 재료까지 따뜻해져요.'}
+      ];
+      const options=[];
+      outer: for(const family of families){
+        for(const main of family.mains){
+          for(let first=0;first<vegetables.length;first++){
+            for(let second=first+1;second<vegetables.length;second++){
+              for(const sauce of family.sauces){
+                const items=[...new Set([...family.base,main,vegetables[first],vegetables[second],sauce])];
+                if(items.length!==family.base.length+4)continue;
+                const serial=options.length+1;
+                let steps;
+                if(family.method==='rice-fry')steps=[`${main}, ${vegetables[first]}, ${vegetables[second]}를 한입 크기로 썰어요.`,`팬에 기름을 두르고 ${main}과 채소를 먼저 볶아요.`,`밥을 넣고 주걱으로 풀며 재료와 고루 섞어요.`,`${sauce}로 간을 맞춰 센 불에서 짧게 볶아 마무리해요.`];
+                else if(family.method==='rice-bowl')steps=[`${main}과 ${vegetables[first]}, ${vegetables[second]}를 먹기 좋게 준비해요.`,`팬에서 ${main}과 채소를 각각 충분히 익혀요.`,`따뜻한 밥 위에 볶은 재료를 보기 좋게 올려요.`,`${sauce}를 곁들이고 재료와 밥을 함께 비벼 먹어요.`];
+                else if(family.method==='bibimbap')steps=[`${main}과 두 가지 채소를 비슷한 크기로 썰어요.`,`각 재료를 팬에 따로 볶아 소금으로 가볍게 간해요.`,`따뜻한 밥 위에 익힌 재료를 색이 보이도록 둘러 담아요.`,`${sauce}를 올리고 먹기 직전에 골고루 비벼요.`];
+                else if(family.method==='rice-ball')steps=[`${main}과 채소를 잘게 다져 준비해요.`,`재료를 팬에서 익힌 뒤 밥과 함께 섞어요.`,`${sauce}를 넣고 밥알이 뭉칠 만큼 고루 버무려요.`,`한입 크기로 둥글게 빚어 접시에 담아요.`];
+                else if(family.method==='stir-fry')steps=[`${main}과 채소를 씻고 비슷한 크기로 썰어요.`,`팬을 달군 뒤 기름을 두르고 ${main}을 먼저 익혀요.`,`두 가지 채소를 넣고 숨이 살짝 죽을 때까지 볶아요.`,`${sauce}를 넣고 재빨리 섞어 불을 꺼요.`];
+                else if(family.method==='stew')steps=[`${main}과 채소를 먹기 좋은 크기로 썰어요.`,`냄비에 기름을 두르고 ${main}과 ${sauce}를 가볍게 볶아요.`,`물과 채소를 넣고 끓으면 중약불로 줄여요.`,`재료가 부드럽게 익을 때까지 8~10분 끓여요.`];
+                else if(family.method==='soup')steps=[`${main}과 채소를 씻어 비슷한 크기로 썰어요.`,`냄비에 물을 끓이고 익는 데 오래 걸리는 재료부터 넣어요.`,`재료가 거의 익으면 ${sauce}로 조금씩 간을 맞춰요.`,`약불에서 한소끔 더 끓이고 따뜻하게 내요.`];
+                else if(family.method==='pancake')steps=[`${main}과 채소를 잘게 썰어 준비해요.`,`밀가루에 물을 조금씩 넣어 묽은 반죽을 만들어요.`,`재료를 반죽에 섞고 팬에 얇고 둥글게 펴요.`,`앞뒤가 노릇해질 때까지 굽고 ${sauce}를 곁들여요.`];
+                else if(family.method==='omelet')steps=[`${main}과 채소를 작게 썰고 달걀은 곱게 풀어요.`,`팬에서 ${main}과 채소를 먼저 부드럽게 익혀요.`,`달걀물을 붓고 가장자리가 익으면 재료를 가운데로 모아요.`,`${sauce}를 더하고 약불에서 속까지 익혀 마무리해요.`];
+                else if(family.method==='pasta')steps=[`파스타면을 포장지 안내 시간에 맞춰 삶고 면수를 조금 남겨요.`,`${main}과 채소를 썰어 팬에서 충분히 볶아요.`,`삶은 면과 ${sauce}, 면수를 넣고 고루 섞어요.`,`소스가 면에 잘 묻으면 불을 끄고 접시에 담아요.`];
+                else if(family.method==='ramen')steps=[`${main}과 채소를 먹기 좋은 크기로 썰어요.`,`냄비에 물과 라면 수프를 넣고 끓여요.`,`물이 끓으면 면과 준비한 재료를 넣어요.`,`${sauce}를 넣고 재료가 알맞게 익으면 바로 내요.`];
+                else steps=[`식빵과 ${main}, 채소를 먹기 좋게 준비해요.`,`팬에서 ${main}과 채소를 익혀요.`,`식빵 위에 재료와 ${sauce}를 올려요.`,`약불에서 빵을 노릇하게 굽고 따뜻할 때 내요.`];
+                options.push({id:`idea-${serial}`,name:`${sauce} ${main}·${vegetables[first]}·${vegetables[second]} ${family.name}`,category:family.category,time:family.time+(serial%3)*2,level:family.time>18?'보통':'쉬움',serves:1,ingredients:items,required:family.base,photoGroup:family.photo,tip:family.tip,description:`${items.join(', ')}를 활용한 조합 레시피 아이디어예요. 양념은 맛을 보며 조절해 주세요.`,steps});
+                if(options.length>=target)break outer;
+              }
+            }
+          }
+        }
+      }
+      return options;
+    }
+    recipes.push(...createRecipeIdeas(10000-recipes.length));
     const quickIngredients=['달걀','양파','대파','두부','밥','간장','김치','감자','토마토','식빵','치즈','오이','양배추','애호박','스팸','라면','밀가루','당근','참치','참기름','버섯','마요네즈','파스타면','마늘','올리브오일','소금','후추','설탕'];
     const foodPhotos={
       friedRice:{url:'https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c9/Egg_Fried_Rice.jpg/960px-Egg_Fried_Rice.jpg',credit:'Wikimedia Commons',source:'https://commons.wikimedia.org/wiki/File:Egg_Fried_Rice.jpg'},
@@ -251,13 +309,18 @@
       curry:{url:'https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cd/Chicken_Curry_%28490198749%29.jpg/960px-Chicken_Curry_%28490198749%29.jpg',credit:'Wikimedia Commons',source:'https://commons.wikimedia.org/wiki/File:Chicken_Curry_(490198749).jpg'}
     };
     const recipePhotos={'egg-rice':'friedRice','tofu-stew':'stew','tomato-pasta':'pasta','potato-pancake':'pancake','tuna-bowl':'tuna','kimchi-fried-rice':'kimchi','mushroom-omelet':'omelet','cucumber-salad':'salad','onion-soup':'stew','egg-toast':'toast','scallion-pancake':'pancake','egg-sandwich':'toast','cabbage-pancake':'pancake','zucchini-pancake':'pancake','spam-kimchi-rice':'kimchi','ramen-egg':'ramen','tomato-eggs':'omelet','tofu-steak':'tofu','potato-egg-soup':'stew','potato-curry':'curry','tuna-kimchi-pancake':'pancake','kimchi-tofu-rice':'kimchi','potato-cheese-omelet':'omelet','mushroom-fried-rice':'friedRice','zucchini-tofu-stew':'stew','tuna-cucumber-bowl':'tuna','tomato-cheese-toast':'toast','cabbage-tofu-stirfry':'tofu','tomato-mushroom-pasta':'pasta','kimchi-cheese-omelet':'omelet','tofu-veggie-rice':'salad','cabbage-kimchi-rice':'kimchi','potato-egg-hash':'pancake','tuna-kimchi-rice':'kimchi','soy-egg-rice':'friedRice','aglio-olio':'pasta'};
-    const imageFor=(id)=>foodPhotos[recipePhotos[id]];
+    recipes.forEach(recipe=>{if(recipe.photoGroup)recipePhotos[recipe.id]=recipe.photoGroup});
+    const imageFor=(id,fallback)=>foodPhotos[recipePhotos[id]||fallback]||foodPhotos.friedRice;
     let ingredients=[];
     let allergies=[];
     let saved=new Set();
+    let currentPage=1;
+    let recipeTotalCount=0;
+    const pageSize=12;
     const ingredientList=document.querySelector('#ingredient-list');
     const allergyList=document.querySelector('#allergy-list');
     const recipeGrid=document.querySelector('#recipe-grid');
+    const pagination=document.querySelector('#recipe-pagination');
     const input=document.querySelector('#ingredient-input');
     const allergyInput=document.querySelector('#allergy-input');
     let toastTimer;
@@ -304,6 +367,7 @@
       'soy-egg-rice':'간장은 한 번에 많이 넣지 말고 밥을 비벼가며 조금씩 더해요.',
       'aglio-olio':'마늘은 약불에서 천천히 볶아야 타지 않고 오일에 향이 잘 배어요.'
     };
+    recipes.forEach(recipe=>{if(recipe.tip&&!recipeTips[recipe.id])recipeTips[recipe.id]=recipe.tip});
     function escapeHtml(value){return value.replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]))}
     function ingredientKey(value){const key=value.trim().toLocaleLowerCase();return ingredientSynonyms[key]||key}
     function recipeCategory(recipe){if(recipe.category)return recipe.category;if(recipe.id.includes('pasta'))return '양식';if(recipe.id==='tuna-bowl')return '일식/기타';if(recipe.id==='tomato-eggs')return '중식/기타';return '한식'}
@@ -315,23 +379,24 @@
     function renderAllergies(){allergyList.innerHTML=allergies.length?allergies.map(item=>{const safeItem=escapeHtml(item);return `<span class="allergy-tag">${safeItem}<button type="button" data-remove-allergy="${safeItem}" aria-label="알레르기 재료 ${safeItem} 삭제"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m4 4 8 8m0-8-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button></span>`}).join(''):'<p class="allergy-empty">등록한 재료가 없어요.</p>';renderRecipes()}
     function hasAllergy(recipe){return allergies.some(allergy=>{const key=allergy.trim().toLocaleLowerCase();const group=allergyGroups.find(items=>items.includes(key));const terms=(group||[key]).map(item=>item.toLocaleLowerCase());return recipe.ingredients.some(item=>terms.includes(item.toLocaleLowerCase()))})}
     function getIngredientSuggestions(){const scores=new Map();recipes.filter(recipe=>!hasAllergy(recipe)).forEach(recipe=>{const have=recipe.ingredients.filter(item=>ingredients.some(owned=>ingredientKey(owned)===ingredientKey(item))).length;const missing=recipe.ingredients.length-have;if(!missing)return;const weight=1/missing;recipe.ingredients.filter(item=>!ingredients.some(owned=>ingredientKey(owned)===ingredientKey(item))).forEach(item=>scores.set(item,(scores.get(item)||0)+weight))});return [...scores].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],'ko')).slice(0,4).map(([item])=>item)}
-    function getRecipes(){const normalized=new Set(ingredients.map(ingredientKey));const scored=recipes.filter(recipe=>!hasAllergy(recipe)).map(recipe=>{const matched=recipe.ingredients.filter(i=>normalized.has(ingredientKey(i))).length;return {...recipe,matched,score:matched/recipe.ingredients.length}}).filter(r=>r.matched===r.ingredients.length);if(document.querySelector('#sort-select').value==='time')scored.sort((a,b)=>a.time-b.time||b.score-a.score);else scored.sort((a,b)=>b.matched-a.matched||a.time-b.time);return scored}
+    function getRecipes(){const normalized=new Set(ingredients.map(ingredientKey));const scored=recipes.filter(recipe=>!hasAllergy(recipe)).map(recipe=>{const matched=recipe.ingredients.filter(i=>normalized.has(ingredientKey(i))).length;return {...recipe,matched,score:matched/recipe.ingredients.length}}).filter(r=>r.matched===r.ingredients.length);if(document.querySelector('#sort-select').value==='time')scored.sort((a,b)=>a.time-b.time||b.score-a.score);else scored.sort((a,b)=>b.matched-a.matched||a.time-b.time);recipeTotalCount=scored.length;return scored.slice((currentPage-1)*pageSize,currentPage*pageSize)}
     function renderRecipes(){const list=getRecipes();const title=document.querySelector('#result-title');title.textContent=ingredients.length?(allergies.length?`알레르기 제외 후 메뉴 ${list.length}가지`:`지금 만들 수 있는 메뉴 ${list.length}가지`):'재료를 골라 메뉴 찾기';if(!list.length){const suggestions=getIngredientSuggestions();const heading=allergies.length?'조건에 맞는 메뉴가 없어요':ingredients.length?'모든 재료가 갖춰진 메뉴가 아직 없어요':'냉장고 재료를 담아 메뉴를 찾아보세요';const message=allergies.length?'보유 재료를 더 추가하거나 알레르기 제외 목록을 확인해 주세요.':ingredients.length?'부족한 재료가 있는 메뉴는 숨겨두었어요. 아래 재료를 더하면 다시 찾아볼게요.':'빠르게 추가하거나 직접 입력해 주세요. 필요한 재료가 모두 등록된 메뉴만 보여드려요.';recipeGrid.innerHTML=`<div class="empty-results"><strong>${heading}</strong><p>${message}</p>${suggestions.length?`<div class="empty-suggestions" aria-label="추가하면 좋은 재료">${suggestions.map(item=>`<button class="quick-chip" type="button" data-add="${escapeHtml(item)}">+ ${escapeHtml(item)}</button>`).join('')}</div>`:''}</div>`;return}recipeGrid.innerHTML=list.map((r,index)=>{const photo=imageFor(r.id);return `<article class="recipe-card" tabindex="0" role="button" data-recipe="${r.id}" style="animation-delay:${Math.min(index*55,220)}ms"><div class="food-photo"><img src="${photo.url}" alt="${r.name}" loading="lazy"><a class="photo-credit" href="${photo.source}" target="_blank" rel="noreferrer">${photo.credit}</a><span class="match-badge">재료 ${r.matched}/${r.ingredients.length}개</span><button class="save-btn ${saved.has(r.id)?'saved':''}" type="button" data-save="${r.id}" aria-label="${saved.has(r.id)?'저장 취소':'레시피 저장'}"><svg width="16" height="16" viewBox="0 0 24 24" fill="${saved.has(r.id)?'currentColor':'none'}" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button></div><div class="recipe-info"><h3>${r.name}</h3><div class="recipe-meta"><span>${r.time}분</span><span class="meta-dot"></span><span>${r.level}</span><span class="meta-dot"></span><span>${r.serves}인분</span></div><div class="recipe-footer"><span>재료 모두 보유</span><strong>레시피 보기 ↗</strong></div></div></article>`}).join('')}
     const renderRecipesBase=renderRecipes;
-    renderRecipes=function(){renderRecipesBase();recipeGrid.querySelectorAll('.recipe-card').forEach(card=>{const recipe=recipes.find(item=>item.id===card.dataset.recipe);const category=document.createElement('span');category.className='recipe-category';category.textContent=recipeCategory(recipe);card.querySelector('.recipe-meta').prepend(category)})};
-    function addIngredient(value){const entered=value.trim().replace(/[,，]+$/,'').trim();if(!entered)return;const item=ingredientSynonyms[entered.toLocaleLowerCase()]||entered;if(ingredients.some(i=>ingredientKey(i)===ingredientKey(item))){showToast('이미 목록에 있는 재료예요.');return}ingredients.push(item);renderIngredients();showToast(`${item} 재료를 추가했어요.`)}
-    function addAllergy(value){const item=value.trim().replace(/[,，]+$/,'').trim();if(!item)return;if(allergies.some(i=>i.toLocaleLowerCase()===item.toLocaleLowerCase()))return;allergies.push(item);renderAllergies();showToast(`${item} 포함 메뉴를 추천에서 제외했어요.`)}
+    renderRecipes=function(){renderRecipesBase();const pages=Math.ceil(recipeTotalCount/pageSize);recipeGrid.querySelectorAll('.recipe-card').forEach(card=>{const recipe=recipes.find(item=>item.id===card.dataset.recipe);const category=document.createElement('span');category.className='recipe-category';category.textContent=recipeCategory(recipe);card.querySelector('.recipe-meta').prepend(category)});if(ingredients.length&&recipeTotalCount){const count=recipeTotalCount.toLocaleString('ko-KR');document.querySelector('#result-title').textContent=allergies.length?`알레르기 제외 후 메뉴 ${count}가지`:`지금 만들 수 있는 메뉴 ${count}가지`}pagination.hidden=pages<=1;pagination.innerHTML=pages>1?`<button type="button" data-page="${currentPage-1}" aria-label="이전 페이지" ${currentPage<=1?'disabled':''}>←</button><span class="page-label">${currentPage} / ${pages}</span><button type="button" data-page="${currentPage+1}" aria-label="다음 페이지" ${currentPage>=pages?'disabled':''}>→</button>`:''};
+    function addIngredient(value){const entered=value.trim().replace(/[,，]+$/,'').trim();if(!entered)return;const item=ingredientSynonyms[entered.toLocaleLowerCase()]||entered;if(ingredients.some(i=>ingredientKey(i)===ingredientKey(item))){showToast('이미 목록에 있는 재료예요.');return}ingredients.push(item);currentPage=1;renderIngredients();showToast(`${item} 재료를 추가했어요.`)}
+    function addAllergy(value){const item=value.trim().replace(/[,，]+$/,'').trim();if(!item)return;if(allergies.some(i=>i.toLocaleLowerCase()===item.toLocaleLowerCase()))return;allergies.push(item);currentPage=1;renderAllergies();showToast(`${item} 포함 메뉴를 추천에서 제외했어요.`)}
     function renderRecipeDetail(){const recipe=activeRecipe;const modalContent=document.querySelector('#modal-content');modalContent.innerHTML=`<div class="section-kicker">TODAY'S RECIPE</div><h2 id="modal-title">${recipe.name}</h2><p class="modal-desc">${recipe.description}</p><div class="modal-stats"><span>조리 시간 약 ${recipe.time}분</span><span>난이도 ${recipe.level}</span><div class="serving-picker"><button type="button" data-serving-change="-1" aria-label="인분 줄이기" ${activeServings<=1?'disabled':''}>−</button><span>${activeServings}인분</span><button type="button" data-serving-change="1" aria-label="인분 늘리기" ${activeServings>=12?'disabled':''}>+</button></div></div><div class="modal-columns"><section><h3>준비 재료</h3><ul class="modal-ingredients">${recipe.ingredients.map(i=>`<li><span class="ingredient-name"><span>${escapeHtml(i)} · ${getIngredientAmount(i)}</span><small class="ingredient-status">${ingredients.includes(i)?'보유 중':'준비 필요'}</small></span></li>`).join('')}</ul><p class="amount-note">재료 양은 ${activeServings}인분 기준의 대략적인 양이에요.</p></section><section><div class="steps-heading"><h3>만드는 순서</h3><span class="step-progress" id="step-progress" aria-live="polite">0 / ${recipe.steps.length} 완료</span></div><ol class="modal-steps">${recipe.steps.map(step=>`<li><input class="step-check" type="checkbox" aria-label="조리 단계 완료"><span>${step}</span></li>`).join('')}</ol></section></div><aside class="recipe-tip"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18h6m-5 3h4m-2-19a7 7 0 0 0-4 12.7c.7.5 1 1.2 1 2.3h6c0-1.1.3-1.8 1-2.3A7 7 0 0 0 12 2Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span><strong>맛있게 만드는 팁</strong>${recipeTips[recipe.id]}</span></aside>`;modalContent.querySelectorAll('.step-check').forEach(check=>check.addEventListener('change',()=>{check.closest('li').classList.toggle('done',check.checked);const completed=modalContent.querySelectorAll('.step-check:checked').length;modalContent.querySelector('#step-progress').textContent=`${completed} / ${recipe.steps.length} 완료`}))}
     const renderRecipeDetailBase=renderRecipeDetail;
     renderRecipeDetail=function(){renderRecipeDetailBase();const category=document.createElement('span');category.textContent=`분류 ${recipeCategory(activeRecipe)}`;document.querySelector('.modal-stats').prepend(category)};
-    function openRecipe(recipe){activeRecipe=recipe;activeServings=recipe.serves;const modal=document.querySelector('#recipe-modal');const photo=imageFor(recipe.id);document.querySelector('#modal-image').src=photo.url;document.querySelector('#modal-image').alt=recipe.name;const credit=document.querySelector('#modal-photo-credit');credit.href=photo.source;credit.textContent=photo.credit;renderRecipeDetail();modal.classList.add('open');document.body.style.overflow='hidden';document.querySelector('#modal-close').focus()}
+    function openRecipe(recipe){activeRecipe=recipe;activeServings=recipe.serves;const modal=document.querySelector('#recipe-modal');const photo=imageFor(recipe.id,recipe.photoGroup);document.querySelector('#modal-image').src=photo.url;document.querySelector('#modal-image').alt=recipe.name;const credit=document.querySelector('#modal-photo-credit');credit.href=photo.source;credit.textContent=photo.credit;renderRecipeDetail();modal.classList.add('open');document.body.style.overflow='hidden';document.querySelector('#modal-close').focus()}
     document.querySelector('#modal-content').addEventListener('click',event=>{const button=event.target.closest('[data-serving-change]');if(!button||!activeRecipe)return;activeServings=Math.min(12,Math.max(1,activeServings+Number(button.dataset.servingChange)));renderRecipeDetail()});
     document.querySelector('#ingredient-form').addEventListener('submit',event=>{event.preventDefault();input.value.split(/[,，]/).forEach(addIngredient);input.value='';input.focus()});
     document.querySelector('#allergy-form').addEventListener('submit',event=>{event.preventDefault();allergyInput.value.split(/[,，]/).forEach(addAllergy);allergyInput.value='';allergyInput.focus()});
     document.querySelector('#quick-list').addEventListener('click',event=>{const btn=event.target.closest('[data-add]');if(btn)addIngredient(btn.dataset.add)});
-    ingredientList.addEventListener('click',event=>{const btn=event.target.closest('[data-remove]');if(btn){ingredients=ingredients.filter(i=>i!==btn.dataset.remove);renderIngredients()}});
-    allergyList.addEventListener('click',event=>{const btn=event.target.closest('[data-remove-allergy]');if(btn){allergies=allergies.filter(i=>i!==btn.dataset.removeAllergy);renderAllergies()}});
-    document.querySelector('#sort-select').addEventListener('change',renderRecipes);
+    ingredientList.addEventListener('click',event=>{const btn=event.target.closest('[data-remove]');if(btn){ingredients=ingredients.filter(i=>i!==btn.dataset.remove);currentPage=1;renderIngredients()}});
+    allergyList.addEventListener('click',event=>{const btn=event.target.closest('[data-remove-allergy]');if(btn){allergies=allergies.filter(i=>i!==btn.dataset.removeAllergy);currentPage=1;renderAllergies()}});
+    document.querySelector('#sort-select').addEventListener('change',()=>{currentPage=1;renderRecipes()});
+    pagination.addEventListener('click',event=>{const button=event.target.closest('[data-page]');if(!button||button.disabled)return;currentPage=Number(button.dataset.page);renderRecipes();document.querySelector('.results').scrollIntoView({behavior:'smooth',block:'start'})});
     recipeGrid.addEventListener('click',event=>{const addBtn=event.target.closest('[data-add]');if(addBtn){addIngredient(addBtn.dataset.add);return}if(event.target.closest('a'))return;const saveBtn=event.target.closest('[data-save]');if(saveBtn){event.stopPropagation();const id=saveBtn.dataset.save;saved.has(id)?(saved.delete(id),showToast('저장을 취소했어요.')):(saved.add(id),showToast('레시피를 저장했어요.'));renderRecipes();return}const card=event.target.closest('[data-recipe]');if(card)openRecipe(recipes.find(r=>r.id===card.dataset.recipe))});
     recipeGrid.addEventListener('keydown',event=>{if((event.key==='Enter'||event.key===' ')&&event.target.matches('[data-recipe]')){event.preventDefault();openRecipe(recipes.find(r=>r.id===event.target.dataset.recipe))}});
     document.querySelector('#modal-close').addEventListener('click',()=>{document.querySelector('#recipe-modal').classList.remove('open');document.body.style.overflow=''});
